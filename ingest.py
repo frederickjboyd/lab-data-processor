@@ -10,6 +10,9 @@ COL_4 = 3
 COL_5 = 4
 COL_6 = 5
 
+# Defining experiment constants
+P_ATM = 100.07
+
 
 # Read raw data from file
 def readData(dirName, filetype):
@@ -42,8 +45,8 @@ def processArray(array):
         # Converting temperature data from Celsius to Kelvin
         col_1_data = celsius_to_kelvin(col_1_data)
         col_2_data = celsius_to_kelvin(col_2_data)
-        col_3_data = psi_to_kPa(col_3_data)
-        col_4_data = psi_to_kPa(col_4_data)
+        col_3_data = psi_to_kPa(col_3_data, P_ATM)
+        col_4_data = psi_to_kPa(col_4_data, P_ATM)
         t.append(float(col_1_data))
         y_1.append(float(col_2_data))
         y_2.append(float(col_3_data))
