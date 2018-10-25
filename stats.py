@@ -2,26 +2,17 @@ from scipy.stats import chisquare
 import numpy as np
 
 
-# Defining constants for columns of data
-TIME_COL = 0
-T1_COL = 1
-T2_COL = 2
-P1_COL = 3
-P2_COL = 4
-M_FLOWRATE_COL = 5
-
-
-def reducedChiSquared(data, bestFit, uncertainty):
+def reducedChiSquared(dataSet, bestFit, uncertainty):
     # Check if there is a best fit for each set of data
-    if len(bestFit) != len(data):
+    if len(bestFit) != len(dataSet):
         return False
     chi_squared_reduced = []
     # expectedValues = calculateExpectedValues(data, bestFit)
     # Calculate degree of polynomial best fit
     # degree = len(bestFit) - 1
-    for i in range(0, len(data)):
-        X = data[i][0]
-        Y = data[i][1]
+    for i in range(0, len(dataSet)):
+        X = dataSet[i][0]
+        Y = dataSet[i][1]
         a = bestFit[i][0]
         b = bestFit[i][1]
         accum = 0
@@ -40,19 +31,20 @@ def degreesOfFreedom(data):
     return len(data) - 2
 
 
-def calculateTotalMass(data):
+def integrate(X, Y, dt):
+    if len(X) != len(Y):
+        return False
     accum = 0
-    dt = 0.1
-    for i in range(0, len(data[M_FLOWRATE_COL])):
-        accum += data[M_FLOWRATE_COL][i] * dt
+    for i in range(0, len(Y)):
+        accum += Y[i] * dt
     return accum
 
 
-def fitData(data, degree):
+def fitData(dataSet, degree):
     bestFits = []
-    for i in range(0, len(data)):
-        x = data[i][0]
-        y = data[i][1]
+    for i in range(0, len(dataSet)):
+        x = dataSet[i][0]
+        y = dataSet[i][1]
         poly = np.polyfit(x, y, degree)
         bestFits.append(poly)
     return bestFits
