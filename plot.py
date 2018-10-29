@@ -16,20 +16,21 @@ def convertTimeToIndex(time, dt):
 # y_label     {string} y-axis label
 # data_legend {string} Label to use in legend for data being plotted
 # plotFit     {boolean} Determines whether a best fit
+# saveDir     {string} Directory to save plots
 def plotData(dataSet, bestFit, title, x_label, y_label, data_legend, plotFit, saveDir):
     for i in range(0, len(dataSet)):
         X = dataSet[i][0]
         Y = dataSet[i][1]
-        x_fit, y_fit = calculatePrettyBestFit(X, bestFit, 100)
         if plotFit:
             for i in range(0, len(Y)):
                 plt.scatter(X, Y[i], color='black', s=1, label=data_legend)
+                x_fit, y_fit = calculatePrettyBestFit(X, bestFit[i], 100)
                 plt.plot(x_fit, y_fit, '--', label="Best Fit")
         plt.xlabel(x_label)
         plt.ylabel(y_label)
         plt.title(title)
         plt.legend()
-        plt.savefig(saveDir + 'run-' + str(i), dpi=300)
+        plt.savefig(saveDir + '/' + 'plot-' + str(i), dpi=300)
         plt.close()
 
 
@@ -48,7 +49,7 @@ def plotResiduals(dataSet, col, bestFit, title, x_label, y_label, saveDir):
         plt.xlabel(x_label)
         plt.ylabel(y_label)
         plt.title(title)
-        plt.savefig(saveDir + 'run-' + str(i), dpi=300)
+        plt.savefig(saveDir + '/' + 'residual-' + str(i), dpi=300)
         plt.close()
 
 

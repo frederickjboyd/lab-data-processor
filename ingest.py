@@ -12,6 +12,7 @@ COL_6 = 5
 
 # Defining experiment constants
 P_ATM = 100.07
+LAMBDA_O = 283.2
 
 
 # Read raw data from file
@@ -20,7 +21,8 @@ def readData(dirName, filetype, skipRows):
     fileNames.sort(key=len)
     for file in fileNames:
         print (file)
-    data = [np.loadtxt(file, skiprows=skipRows) for file in fileNames]
+    data = [np.loadtxt(file, delimiter=',', skiprows=skipRows)
+            for file in fileNames]
     processedData = []
     for array in data:
         dataPoints = processArray(array)
@@ -29,15 +31,26 @@ def readData(dirName, filetype, skipRows):
 
 
 def processArray(array):
-    t = []
-    y_1 = []
+    x = []
+    y = []
     for i in range(0, len(array)):
         col_1_data = array[i][COL_1]
         col_2_data = array[i][COL_2]
-        # Converting temperature data from Celsius to Kelvin
-        t.append(float(col_1_data))
-        y_1.append(float(col_2_data))
-    return [t, [y_1]]
+        x_processed = process_x(col_1_data)
+        y_processed = process_y(col_2_data)
+        x.append(float(x_processed))
+        y.append(float(y_processed))
+    return [x, [y]]
+
+
+# process_x processes a single x value before saving it
+def process_x(X):
+    return 1 / (X - LAMBDA_O)
+
+
+# process_y processes a single y value before saving it
+def process_y(array):
+    return array
 
 
 # Convert temperature readings from Celsius to Kelvin

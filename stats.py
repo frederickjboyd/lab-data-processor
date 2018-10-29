@@ -1,4 +1,3 @@
-from scipy.stats import chisquare
 import numpy as np
 
 
@@ -45,6 +44,7 @@ def fitData(dataSet, degree):
     for i in range(0, len(dataSet)):
         x = dataSet[i][0]
         y = dataSet[i][1]
-        poly = np.polyfit(x, y, degree)
-        bestFits.append(poly)
-    return bestFits
+        for j in range(0, len(y)):
+            poly = np.polyfit(x, y[j], degree)
+            bestFits.append(poly)
+        return bestFits
