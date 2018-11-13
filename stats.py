@@ -16,12 +16,12 @@ def reducedChiSquared(dataSet, bestFit, uncertainty):
         b = bestFit[i][1]
         accum = 0
         # Check if there's any length discrepancies between the inputs
-        if len(X) != len(Y):
+        if len(X) != len(Y[i]):
             return False
         expected = [a * x_i + b for x_i in X]
         freedom = degreesOfFreedom(X)
-        for i in range(0, len(Y)):
-            accum += ((expected[i] - Y[i]) ** 2) / (uncertainty ** 2)
+        for j in range(0, len(Y[i])):
+            accum += ((expected[j] - Y[i][j]) ** 2) / (uncertainty ** 2)
         chi_squared_reduced.append(accum / freedom)
     return chi_squared_reduced
 
@@ -47,4 +47,4 @@ def fitData(dataSet, degree):
         for j in range(0, len(y)):
             poly = np.polyfit(x, y[j], degree)
             bestFits.append(poly)
-        return bestFits
+    return bestFits

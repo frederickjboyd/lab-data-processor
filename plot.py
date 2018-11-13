@@ -15,15 +15,17 @@ def convertTimeToIndex(time, dt):
 # x_label     {string} x-axis label
 # y_label     {string} y-axis label
 # data_legend {string} Label to use in legend for data being plotted
-# plotFit     {boolean} Determines whether a best fit
+# plotFit     {boolean} Determines whether a best fit should be plotted
 # saveDir     {string} Directory to save plots
-def plotData(dataSet, bestFit, title, x_label, y_label, data_legend, plotFit, saveDir):
+def plotData(dataSet, y_err, bestFit, title, x_label, y_label, data_legend, plotFit, saveDir):
     for i in range(0, len(dataSet)):
         X = dataSet[i][0]
         Y = dataSet[i][1]
         if plotFit:
-            for i in range(0, len(Y)):
-                plt.scatter(X, Y[i], color='black', s=1, label=data_legend)
+            for j in range(0, len(Y)):
+                plt.scatter(X, Y[j], color='black', s=1, label=data_legend)
+                # plt.errorbar(X, Y[i], yerr=y_err, color='black', fmt='o',
+                #  markersize=2, linewidth=1, label=data_legend)
                 x_fit, y_fit = calculatePrettyBestFit(X, bestFit[i], 100)
                 plt.plot(x_fit, y_fit, '--', label="Best Fit")
         plt.xlabel(x_label)
@@ -37,7 +39,7 @@ def plotData(dataSet, bestFit, title, x_label, y_label, data_legend, plotFit, sa
 def plotResiduals(dataSet, col, bestFit, title, x_label, y_label, saveDir):
     for i in range(0, len(dataSet)):
         X = dataSet[i][0]
-        Y = dataSet[i][1][col:col + 1]
+        Y = dataSet[i][1][col]
         a = bestFit[i][0]
         b = bestFit[i][1]
         expected = [a * x_i + b for x_i in X]
@@ -56,8 +58,9 @@ def plotResiduals(dataSet, col, bestFit, title, x_label, y_label, saveDir):
 def calculatePrettyBestFit(X, fit, points):
     a = fit[0]
     b = fit[1]
+    c = fit[2]  # ONLY FOR POLYNOMIAL FIT IN AER LAB - REMOVE THIS LATER
     x_min = min(X)
     x_max = max(X)
     x_spaced = np.linspace(x_min, x_max, points)
-    y_fit = [a * x_i + b for x_i in x_spaced]
+    y_fit = [a * (x_i ** 2) + b * x_i + c for x_i in x_spaced]
     return [x_spaced, y_fit]

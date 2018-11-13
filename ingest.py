@@ -44,8 +44,8 @@ def processArray(array):
 
 
 # process_x processes a single x value before saving it
-def process_x(X):
-    return 1 / (X - LAMBDA_O)
+def process_x(array):
+    return array
 
 
 # process_y processes a single y value before saving it
