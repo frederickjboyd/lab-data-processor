@@ -12,27 +12,35 @@ LAMBDA_O = 283.2
 
 
 # Read raw data from file
-def readData(dirName, filetype, skipRows, yCols):
+def readData(dirName, filetype, skipRows):
+    # Finding all files in specified directory with the extension "filetype"
     files = glob(dirName + '/*.' + filetype)
     files.sort(key=len)
+    # Initializing variables
     fileDirectories = []
     processedData = []
     for file in files:
         fileDirectories.append(str(file))
+        # Showing user which files are being processed
         print str(file)
     fileNames = extractFileName(fileDirectories, filetype)
-    data = [np.loadtxt(file, skiprows=skipRows)
-            for file in files]
+    # Loading data
+    data = [np.loadtxt(file, skiprows=skipRows) for file in files]
+    # Checking that data loaded properly
+    if len(data) == 0:
+        return False
     for array in data:
-        dataPoints = processArray(array, yCols)
+        dataPoints = processArray(array)
         processedData.append(dataPoints)
-    return [processedData, fileNames]
+    return processedData, fileNames
 
 
 # Convert each row of data into separate x and y lists
-def processArray(array, yCols):
+def processArray(array):
     x = []
     y = []
+    # Determining number of y columns in data (subtract 1 to account for x column)
+    yCols = len(array[0]) - 1
     for i in range(0, yCols):
         y.append([])
     for i in range(0, len(array)):

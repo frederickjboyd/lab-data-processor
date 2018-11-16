@@ -8,6 +8,7 @@ def convertTimeToIndex(time, dt):
 
 # Generates basic plot for two variables
 # dataSet     {list} Contains X and Y values of data to plot
+# fileNames   {list} Directories of target files
 # y_err       {float} Magnitude of error bars
 # bestFit     {list} Contains coefficients of the polynomial best fit (ordered
 #             from highest degree coefficient to lowest degree coefficient)
@@ -64,9 +65,8 @@ def plotResiduals(dataSet, col, bestFit, title, x_label, y_label, saveDir):
 def calculatePrettyBestFit(X, fit, points):
     a = fit[0]
     b = fit[1]
-    c = fit[2]  # ONLY FOR POLYNOMIAL FIT IN AER LAB - REMOVE THIS LATER
     x_min = min(X)
     x_max = max(X)
     x_spaced = np.linspace(x_min, x_max, points)
-    y_fit = [a * (x_i ** 2) + b * x_i + c for x_i in x_spaced]
+    y_fit = [a * x_i + b for x_i in x_spaced]
     return [x_spaced, y_fit]
