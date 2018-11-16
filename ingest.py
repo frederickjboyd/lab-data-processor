@@ -16,31 +16,38 @@ LAMBDA_O = 283.2
 
 
 # Read raw data from file
-def readData(dirName, filetype, skipRows):
+def readData(dirName, filetype, skipRows, yCols):
     fileNames = glob(dirName + '/*.' + filetype)
     fileNames.sort(key=len)
     for file in fileNames:
         print (file)
-    data = [np.loadtxt(file, delimiter=',', skiprows=skipRows)
+    data = [np.loadtxt(file, skiprows=skipRows)
             for file in fileNames]
     processedData = []
     for array in data:
-        dataPoints = processArray(array)
+        dataPoints = processArray(array, yCols)
         processedData.append(dataPoints)
     return processedData
 
 
-def processArray(array):
+# Convert each row of data into separate x and y lists
+def processArray(array, yCols):
     x = []
     y = []
+    for i in range(0, yCols):
+        y.append([])
     for i in range(0, len(array)):
-        col_1_data = array[i][COL_1]
-        col_2_data = array[i][COL_2]
-        x_processed = process_x(col_1_data)
-        y_processed = process_y(col_2_data)
-        x.append(float(x_processed))
-        y.append(float(y_processed))
-    return [x, [y]]
+        x_data_raw = array[i][COL_1]
+        x_data_processed = process_x(x_data_raw)
+        x.append(float(x_data_processed))
+        # Loop through data to add additional columns
+        for j in range(0, yCols):
+            # Offset loop value to account for x column
+            index_offset = j + 1
+            y_data_raw = array[i][index_offset]
+            y_data_processed = process_y(y_data_raw)
+            y[j].append(float(y_data_processed))
+    return [x, y]
 
 
 # process_x processes a single x value before saving it
