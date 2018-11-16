@@ -1,33 +1,32 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from os.path import basename
 from glob import glob
 
 # Defining constants for columns of data
 COL_1 = 0
-COL_2 = 1
-COL_3 = 2
-COL_4 = 3
-COL_5 = 4
-COL_6 = 5
 
-# Defining experiment constants
+# Defining experimental constants
 P_ATM = 100.07
 LAMBDA_O = 283.2
 
 
 # Read raw data from file
 def readData(dirName, filetype, skipRows, yCols):
-    fileNames = glob(dirName + '/*.' + filetype)
-    fileNames.sort(key=len)
-    for file in fileNames:
-        print (file)
-    data = [np.loadtxt(file, skiprows=skipRows)
-            for file in fileNames]
+    files = glob(dirName + '/*.' + filetype)
+    files.sort(key=len)
+    fileDirectories = []
     processedData = []
+    for file in files:
+        fileDirectories.append(str(file))
+        print str(file)
+    fileNames = extractFileName(fileDirectories, filetype)
+    data = [np.loadtxt(file, skiprows=skipRows)
+            for file in files]
     for array in data:
         dataPoints = processArray(array, yCols)
         processedData.append(dataPoints)
-    return processedData
+    return [processedData, fileNames]
 
 
 # Convert each row of data into separate x and y lists
@@ -69,3 +68,13 @@ def celsius_to_kelvin(celsiusReading):
 # NOTE: p_atm must be in [kPa]
 def psi_to_kPa(psiReading, p_atm):
     return (psiReading * 6.8948) + p_atm
+
+
+def extractFileName(fileDirectories, filetype):
+    fileNames = []
+    # Add 1 to account for '.' before extension
+    extensionLength = len(filetype) + 1
+    for directory in fileDirectories:
+        fileName = basename(directory)
+        fileNames.append(fileName[:len(fileName) - extensionLength])
+    return fileNames

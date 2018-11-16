@@ -18,7 +18,10 @@ def convertTimeToIndex(time, dt):
 # plotErr     {boolean} Determines whether plot should include error bars
 # plotFit     {boolean} Determines whether a best fit should be plotted
 # saveDir     {string} Directory to save plots
-def plotData(dataSet, y_err, bestFit, title, x_label, y_label, data_legend, plotErr, plotFit, saveDir):
+def plotData(dataSet, fileNames, y_err, bestFit, title, x_label, y_label,
+             data_legend, plotErr, plotFit, saveDir):
+    if len(dataSet) != len(fileNames):
+        print "Discrepancy between number of files selected and file name array length"
     for i in range(0, len(dataSet)):
         X = dataSet[i][0]
         Y = dataSet[i][1]
@@ -35,7 +38,7 @@ def plotData(dataSet, y_err, bestFit, title, x_label, y_label, data_legend, plot
         plt.ylabel(y_label)
         plt.title(title)
         plt.legend()
-        plt.savefig(saveDir + '/' + 'plot-' + str(i), dpi=300)
+        plt.savefig(saveDir + '/' + fileNames[i], dpi=300)
         plt.close()
 
 
