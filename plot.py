@@ -20,18 +20,28 @@ def convertTimeToIndex(time, dt):
 # plotFit     {boolean} Determines whether a best fit should be plotted
 # saveDir     {string} Directory to save plots
 def plotData(dataSet, fileNames, y_err, bestFit, title, x_label, y_label,
-             data_legend, plotErr, plotFit, saveDir):
+             data_legend, plotErr, plotFit, plotLegend, saveDir):
     if len(dataSet) != len(fileNames):
         print "Discrepancy between number of files selected and file name array length"
+        return False
     for i in range(0, len(dataSet)):
         X = dataSet[i][0]
         Y = dataSet[i][1]
+        if len(data_legend) != len(Y):
+            print "Number of legend labels does not match the number of y columns"
         for j in range(0, len(Y)):
             if plotErr:
-                plt.errorbar(X, Y[j], yerr=y_err, color='black', fmt='o',
-                             markersize=2, linewidth=1, label=data_legend)
+                if plotLegend:
+                    plt.errorbar(X, Y[j], yerr=y_err, fmt='o',
+                                 markersize=2, linewidth=1, label=data_legend[j])
+                else:
+                    plt.errorbar(X, Y[j], yerr=y_err, fmt='o',
+                                 markersize=2, linewidth=1)
             else:
-                plt.scatter(X, Y[j], color='black', s=1, label=data_legend)
+                if plotLegend:
+                    plt.scatter(X, Y[j], s=3, label=data_legend[j])
+                else:
+                    plt.scatter(X, Y[j], s=1)
             if plotFit:
                 x_fit, y_fit = calculatePrettyBestFit(X, bestFit[i], 100)
                 plt.plot(x_fit, y_fit, '--', label="Best Fit")
